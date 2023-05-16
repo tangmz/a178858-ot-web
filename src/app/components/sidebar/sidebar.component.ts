@@ -8,10 +8,10 @@ declare interface RouteInfo {
 }
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard',  icon: 'design_app', class: '' },
-    { path: '/icons', title: 'OT Report',  icon:'business_chart-bar-32', class: '' },
-    { path: '/maps', title: 'Salary Report',  icon:'business_chart-pie-36', class: '' },
-    { path: '/user-profile', title: 'Employee Details',  icon:'users_single-02', class: '' },
-    { path: '/table-list', title: 'Table List',  icon:'design_bullet-list-67', class: '' },
+    // { path: '/icons', title: 'OT Report',  icon:'business_chart-bar-32', class: '' },
+    // { path: '/maps', title: 'Salary Report',  icon:'business_chart-pie-36', class: '' },
+    { path: '/employee_details', title: 'Employee Details',  icon:'users_single-02', class: '' },
+    // { path: '/table-list', title: 'Table List',  icon:'design_bullet-list-67', class: '' },
     { path: '/ot_report', title: 'OT Report',  icon:'business_chart-bar-32', class: '' },
     { path: '/salary_report', title: 'Salary Report',  icon:'business_chart-pie-36', class: '' },
     { path: '/calc', title: 'Calculator',  icon:'education_paper', class: 'active active-pro' }

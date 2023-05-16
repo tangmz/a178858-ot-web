@@ -282,6 +282,9 @@
     &[data-color="yellow"]{
       @include sidebar-color($warning-color);
     }
+    &[data-color="purple"]{
+      @include sidebar-color($purple-color);
+    }
 }
 
 .visible-on-sidebar-regular{

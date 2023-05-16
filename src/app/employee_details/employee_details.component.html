@@ -1,0 +1,132 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Edit Profile</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="employeeForm">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Company (disabled)</label>
+                  <input type="text" class="form-control" disabled="" placeholder="Company" value="Sharon Sdn Bhd.">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Username</label>
+                  <input type="text" class="form-control" placeholder="Username" formControlName="username">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" name="password" id="password" class="form-control" placeholder="Password" formControlName="password">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Name</label>
+                  <input type="text" class="form-control" placeholder="Name" formControlName="name">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="email">Phone Number</label>
+                  <input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Base Salary (RM)</label>
+                  <input type="number" class="form-control" placeholder="2500" formControlName="baseSalary">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Position</label>
+                  <input type="text" class="form-control" placeholder="Clerk" formControlName="position">
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="button-container">
+            <button class="btn btn-primary btn-outline-primary btn-round" (click)="onClear()">
+              <i class="now-ui-icons ui-1_simple-remove"></i>
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-user">
+        <div class="image">
+          <img src="../assets/img/bg5.jpg" alt="...">
+        </div>
+        <div class="card-body">
+          <div class="author">
+            <img class="avatar border-gray" src="../assets/img/mike.jpg" alt="...">
+            <h5 class="title">{{ employeeForm.value.name || '@employee' }}</h5>
+            <p class="description">
+              {{ employeeForm.value.username || '@username' }}
+            </p>
+          </div>
+        </div>
+        <hr>
+        <div class="button-container">
+          <button class="btn btn-neutral btn-danger btn-round btn-lg" [disabled]="!!employeeForm.value.username" (click)="onCreate()">
+            <i class="now-ui-icons ui-1_simple-add"></i>
+            Create
+          </button>
+          <button class="btn btn-neutral btn-success btn-round btn-lg" [disabled]="!employeeForm.value.username" (click)="onSave()">
+            <i class="now-ui-icons ui-1_check"></i>
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title"> Employees Table</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>No.</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Position</th>
+                <th class="text-right">Base Salary (RM)</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index;"
+                  (click)="onSelectRow(row)">
+                  <td>{{ rows.indexOf(row)+1 }}</td>
+                  <td>{{ row.name }}</td>
+                  <td>{{ row.phoneNumber }}</td>
+                  <td>{{ row.position }}</td>
+                  <td class="text-right">{{ row.baseSalary }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row single-row mt-10 d-flex justify-content-between">
+            <div class="col-md-4"> Page {{ page }} of {{ rows.length == 0 ? 1 : Math.ceil(rows.length / itemsPerPage) }} </div>
+            <pagination-controls (pageChange)="page = $event"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

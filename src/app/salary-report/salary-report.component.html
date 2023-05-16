@@ -8,8 +8,35 @@
           <h5 class="title">Salary Report</h5>
         </div>
         <div class="card-body">
-          <p>salary-report works!</p>
-          <button class="btn btn-primary" type="button">View in Excel</button>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th>No.</th>
+                  <th>Employee Name</th>
+                  <th>Position</th>
+                  <th>Total OT Duration</th>
+                  <th>Total OT Pay (RM)</th>
+                  <th class="text-right">Total Payable (RM)</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index;">
+                    <td>{{ rows.indexOf(row)+1 }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.position }}</td>
+                    <td>{{ row.totalOtDuration }}</td>
+                    <td>{{ row.totalOtPay }}</td>
+                    <td class="text-right">{{ row.totalPay }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row single-row mt-10 d-flex justify-content-between">
+              <div class="col-md-4"> Page {{ page }} of {{ rows.length == 0 ? 1 : Math.ceil(rows.length / itemsPerPage) }} </div>
+              <pagination-controls (pageChange)="page = $event"></pagination-controls>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="button" (click)="downloadCsv()">View in Excel</button>
         </div>
       </div>
     </div>

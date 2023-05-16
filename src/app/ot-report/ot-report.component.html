@@ -5,11 +5,51 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="title">OT Report</h5>
+          <h5 class="title">Employee Picker</h5>
         </div>
         <div class="card-body">
-          <ng-select></ng-select>
-          <p>ot-report works!</p>
+          <ng-select
+              [items]="employees"
+              bindValue="id"
+              bindLabel="name"
+              [(ngModel)]="selectedEmployeeId"
+              [clearable]="false"
+              (change)="onSelectorChange()"
+              placeholder="Employee"
+          ></ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title"> OT Report Table</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>No.</th>
+                <th>OT Date</th>
+                <th>Duration</th>
+                <th>Job Description</th>
+                <th class="text-right">Status</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index;">
+                  <td>{{ rows.indexOf(row)+1 }}</td>
+                  <td>{{ row.otDate }}</td>
+                  <td>{{ row.duration }}</td>
+                  <td>{{ row.jobDesc }}</td>
+                  <td class="text-right">{{ row.reqeustStatus }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row single-row mt-10 d-flex justify-content-between">
+            <div class="col-md-4"> Page {{ page }} of {{ rows.length == 0 ? 1 : Math.ceil(rows.length / itemsPerPage) }} </div>
+            <pagination-controls (pageChange)="page = $event"></pagination-controls>
+          </div>
         </div>
       </div>
     </div>
