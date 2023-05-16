@@ -5,7 +5,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="title">Salary Report</h5>
+          <h5 class="title">Salary Report for {{ currentMonth }}</h5>
         </div>
         <div class="card-body">
           <div class="card-body">
@@ -36,7 +36,12 @@
               <pagination-controls (pageChange)="page = $event"></pagination-controls>
             </div>
           </div>
-          <button class="btn btn-primary" type="button" (click)="downloadCsv()">View in Excel</button>
+          <div class="action-button">
+            <button class="btn btn-primary btn-outline-primary btn-round" type="button" (click)="downloadCsv()">
+              <i class="now-ui-icons files_paper"></i>
+              View in Excel
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -5,10 +5,58 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="title">Calculator</h5>
+          <h5 class="title">EPF & Socso Calculator</h5>
         </div>
         <div class="card-body">
-          <p>calc works!</p>
+          <form [formGroup]="calculatorForm">
+            <div class="row justify-content-center">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Salary (RM)</label>
+                  <input type="number" class="form-control" placeholder="1000.00" formControlName="salary">
+                </div>
+              </div>
+            </div>
+            <div class="row button-container calc-button">
+              <button class="btn btn-primary btn-outline-primary btn-round" (click)="calc()">
+                <i class="now-ui-icons design-2_ruler-pencil"></i>
+                Calculate
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Results</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive" *ngIf="netPay">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>Contribution</th>
+                <th>Employer</th>
+                <th>Employee</th>
+                <th>Sub-total</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of rows;">
+                  <td>{{ row.contribution }}</td>
+                  <td>{{ row.employerContrib }}</td>
+                  <td>{{ row.employeeContrib }}</td>
+                  <td>{{ row.subTotal }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="payable">
+            <span class="text-primary">
+              <b>Total Payable: RM
+              {{ netPay || '0' }}</b>
+            </span>
+          </div>
         </div>
       </div>
     </div>

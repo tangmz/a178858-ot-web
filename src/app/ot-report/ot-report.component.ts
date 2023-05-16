@@ -41,7 +41,7 @@ export class OtReportComponent implements OnInit, OnDestroy {
   }
 
   getOtList(userId: number) {
-    this.rows = null;
+    this.rows = [];
     this._endpoint.getOtList(userId).pipe(takeUntil(this._unsubscribeAll)).subscribe({
       next: (response) => {
         this.rows = response;

@@ -8,15 +8,19 @@
           <h5 class="title">Employee Picker</h5>
         </div>
         <div class="card-body">
-          <ng-select
-              [items]="employees"
-              bindValue="id"
-              bindLabel="name"
-              [(ngModel)]="selectedEmployeeId"
-              [clearable]="false"
-              (change)="onSelectorChange()"
-              placeholder="Employee"
-          ></ng-select>
+          <div class="row justify-content-center">
+            <div class="col-md-6 selector">
+              <ng-select
+                [items]="employees"
+                bindValue="id"
+                bindLabel="name"
+                [(ngModel)]="selectedEmployeeId"
+                [clearable]="false"
+                (change)="onSelectorChange()"
+                placeholder="Employee"
+              ></ng-select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -41,13 +45,13 @@
                   <td>{{ row.otDate }}</td>
                   <td>{{ row.duration }}</td>
                   <td>{{ row.jobDesc }}</td>
-                  <td class="text-right">{{ row.reqeustStatus }}</td>
+                  <td class="text-right">{{ row.requestStatus }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="row single-row mt-10 d-flex justify-content-between">
-            <div class="col-md-4"> Page {{ page }} of {{ rows.length == 0 ? 1 : Math.ceil(rows.length / itemsPerPage) }} </div>
+            <div class="col-md-4"> Page {{ page }} of {{ (rows.length == 0) ? 1 : Math.ceil(rows.length / itemsPerPage) }} </div>
             <pagination-controls (pageChange)="page = $event"></pagination-controls>
           </div>
         </div>

@@ -5,7 +5,7 @@ export interface OtResponse {
     otDate: Date;
     duration: number;
     jobDesc: string;
-    reqeustStatus: string;
+    requestStatus: string;
     userType: string;
     dayType: string;
     user: EmployeeDatatableResponse;

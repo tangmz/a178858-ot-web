@@ -17,8 +17,11 @@ export class SalaryReportComponent implements OnInit, OnDestroy {
   rows: SalaryReportResponse[] = [];
   page: number = 1;
   itemsPerPage: number = 5;
+  currentMonth: string;
 
-  constructor(private _endpoint: SalaryReportEndpointService,) { }
+  constructor(private _endpoint: SalaryReportEndpointService,) { 
+    this.currentMonth = new Date().toLocaleString('default', { month: 'long' });
+  }
 
   ngOnInit(): void {
     this.fetch();
@@ -40,8 +43,7 @@ export class SalaryReportComponent implements OnInit, OnDestroy {
   downloadCsv() {
     this._endpoint.getSalaryReportCSV().pipe(takeUntil(this._unsubscribeAll)).subscribe({
       next: (response) => {
-        const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-        const filename = `${currentMonth}-salary.csv`;
+        const filename = `${this.currentMonth}-salary.csv`;
         saveAs(response, filename);
       }
     })
