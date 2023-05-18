@@ -1,8 +1,7 @@
 <div class="panel-header panel-header-lg">
     <canvas baseChart id="bigDashboardChart"
-                [datasets]="lineBigDashboardChartData"
                 [labels]="lineBigDashboardChartLabels"
-                 [colors]="lineBigDashboardChartColors"
+                [colors]="lineBigDashboardChartColors"
                 [options]="lineBigDashboardChartOptions"
                 [chartType]="lineBigDashboardChartType"
                 (chartHover)="chartHovered($event)"
@@ -31,7 +30,6 @@
         <div class="card-body">
           <div class="chart-area">
             <canvas baseChart id="lineChartExample"
-                        [datasets]="lineChartData"
                         [labels]="lineChartLabels"
                         [colors]="lineChartColors"
                         [options]="lineChartOptions"
@@ -68,7 +66,6 @@
           <div class="chart-area">
             <!-- <canvas id="lineChartExampleWithNumbersAndGrid"></canvas> -->
             <canvas baseChart id="lineChartExampleWithNumbersAndGrid"
-                        [datasets]="lineChartWithNumbersAndGridData"
                         [labels]="lineChartWithNumbersAndGridLabels"
                         [colors]="lineChartWithNumbersAndGridColors"
                         [options]="lineChartWithNumbersAndGridOptions"
@@ -93,7 +90,6 @@
         <div class="card-body">
           <div class="chart-area">
             <canvas baseChart id="barChartSimpleGradientsNumbers"
-                        [datasets]="lineChartGradientsNumbersData"
                         [labels]="lineChartGradientsNumbersLabels"
                         [colors]="lineChartGradientsNumbersColors"
                         [options]="lineChartGradientsNumbersOptions"

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
+import { first } from 'rxjs/operators';
+import { DashboardEndpointService } from './dashboard-endpoint.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,13 +9,18 @@ import * as Chartist from 'chartist';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+
+  OTRequestsData: number[];
+  lateInsData: number[];
+  earlyInsData: number[];
+  dailySalaryData: number[];
+
   public lineBigDashboardChartType;
   public gradientStroke;
   public chartColor;
   public canvas : any;
   public ctx;
   public gradientFill;
-  public lineBigDashboardChartData:Array<any>;
   public lineBigDashboardChartOptions:any;
   public lineBigDashboardChartLabels:Array<any>;
   public lineBigDashboardChartColors:Array<any>
@@ -22,19 +29,16 @@ export class DashboardComponent implements OnInit {
   public gradientChartOptionsConfigurationWithNumbersAndGrid: any;
 
   public lineChartType;
-  public lineChartData:Array<any>;
   public lineChartOptions:any;
   public lineChartLabels:Array<any>;
   public lineChartColors:Array<any>
 
   public lineChartWithNumbersAndGridType;
-  public lineChartWithNumbersAndGridData:Array<any>;
   public lineChartWithNumbersAndGridOptions:any;
   public lineChartWithNumbersAndGridLabels:Array<any>;
   public lineChartWithNumbersAndGridColors:Array<any>
 
   public lineChartGradientsNumbersType;
-  public lineChartGradientsNumbersData:Array<any>;
   public lineChartGradientsNumbersOptions:any;
   public lineChartGradientsNumbersLabels:Array<any>;
   public lineChartGradientsNumbersColors:Array<any>
@@ -44,7 +48,7 @@ export class DashboardComponent implements OnInit {
   }
 
   public chartHovered(e:any):void {
-    console.log(e);
+    // console.log(e);
   }
   public hexToRGB(hex, alpha) {
     var r = parseInt(hex.slice(1, 3), 16),
@@ -57,7 +61,7 @@ export class DashboardComponent implements OnInit {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  constructor() { }
+  constructor(private _endpoint: DashboardEndpointService) { }
 
   ngOnInit() {
     this.chartColor = "#FFFFFF";
@@ -72,88 +76,101 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, "rgba(255, 255, 255, 0.24)");
 
-    this.lineBigDashboardChartData = [
-        {
-          label: "Data",
+    this._endpoint.getOtStat().pipe(first()).subscribe({
+      next: (response) => {
+        this.OTRequestsData = response.data;
+      }
+    });
+    this._endpoint.getOtStat().pipe(first()).subscribe({
+      next: (response) => {
+        this.lineBigDashboardChartLabels = response.labels;
+      }
+    });
+    this.lineBigDashboardChartColors = [
+      {
+        backgroundColor: this.gradientFill,
+        borderColor: this.chartColor,
+        pointBorderColor: this.chartColor,
+        pointBackgroundColor: "#2c2c2c",
+        pointHoverBackgroundColor: "#2c2c2c",
+        pointHoverBorderColor: this.chartColor,
+      }
+    ];
+    // this.lineBigDashboardChartData = [
+    //   {
+    //     label: "Total OT Requests",
 
-          pointBorderWidth: 1,
-          pointHoverRadius: 7,
-          pointHoverBorderWidth: 2,
-          pointRadius: 5,
-          fill: true,
+    //     pointBorderWidth: 1,
+    //     pointHoverRadius: 7,
+    //     pointHoverBorderWidth: 2,
+    //     pointRadius: 5,
+    //     fill: true,
 
-          borderWidth: 2,
-          data: [50, 150, 100, 190, 130, 90, 150, 160, 120, 140, 190, 95]
-        }
-      ];
-      this.lineBigDashboardChartColors = [
-       {
-         backgroundColor: this.gradientFill,
-         borderColor: this.chartColor,
-         pointBorderColor: this.chartColor,
-         pointBackgroundColor: "#2c2c2c",
-         pointHoverBackgroundColor: "#2c2c2c",
-         pointHoverBorderColor: this.chartColor,
-       }
-     ];
-    this.lineBigDashboardChartLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    //     borderWidth: 2,
+    //     data: this.data,
+    //   }
+    // ];
     this.lineBigDashboardChartOptions = {
-
-          layout: {
-              padding: {
-                  left: 20,
-                  right: 20,
-                  top: 0,
-                  bottom: 0
-              }
-          },
-          maintainAspectRatio: false,
-          tooltips: {
-            backgroundColor: '#fff',
-            titleFontColor: '#333',
-            bodyFontColor: '#666',
-            bodySpacing: 4,
-            xPadding: 12,
-            mode: "nearest",
-            intersect: 0,
-            position: "nearest"
-          },
-          legend: {
-              position: "bottom",
-              fillStyle: "#FFF",
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      fontColor: "rgba(255,255,255,0.4)",
-                      fontStyle: "bold",
-                      beginAtZero: true,
-                      maxTicksLimit: 5,
-                      padding: 10
-                  },
-                  gridLines: {
-                      drawTicks: true,
-                      drawBorder: false,
-                      display: true,
-                      color: "rgba(255,255,255,0.1)",
-                      zeroLineColor: "transparent"
-                  }
-
-              }],
-              xAxes: [{
-                  gridLines: {
-                      zeroLineColor: "transparent",
-                      display: false,
-
-                  },
-                  ticks: {
-                      padding: 10,
-                      fontColor: "rgba(255,255,255,0.4)",
-                      fontStyle: "bold"
-                  }
-              }]
+      charts: [{
+        data: [{
+          dataPoints: this.OTRequestsData,
+        }]
+      }],
+      layout: {
+          padding: {
+              left: 20,
+              right: 20,
+              top: 0,
+              bottom: 0
           }
+      },
+      maintainAspectRatio: false,
+      tooltips: {
+        backgroundColor: '#fff',
+        titleFontColor: '#333',
+        bodyFontColor: '#666',
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: "nearest",
+        intersect: 0,
+        position: "nearest"
+      },
+      legend: {
+        position: "bottom",
+        fillStyle: "#FFF",
+        display: false
+      },
+      scales: {
+        yAxes: [{
+            ticks: {
+                fontColor: "rgba(255,255,255,0.4)",
+                fontStyle: "bold",
+                beginAtZero: true,
+                maxTicksLimit: 5,
+                padding: 10
+            },
+            gridLines: {
+                drawTicks: true,
+                drawBorder: false,
+                display: true,
+                color: "rgba(255,255,255,0.1)",
+                zeroLineColor: "transparent"
+            }
+
+        }],
+        xAxes: [{
+            gridLines: {
+                zeroLineColor: "transparent",
+                display: false,
+
+            },
+            ticks: {
+                padding: 10,
+                fontColor: "rgba(255,255,255,0.4)",
+                fontStyle: "bold"
+            }
+        }]
+      }
     };
 
     this.lineBigDashboardChartType = 'line';
@@ -269,18 +286,18 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, "rgba(249, 99, 59, 0.40)");
 
-    this.lineChartData = [
-        {
-          label: "Active Users",
-          pointBorderWidth: 2,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 1,
-          pointRadius: 4,
-          fill: true,
-          borderWidth: 2,
-          data: [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630]
-        }
-      ];
+    // this.lineChartData = [
+    //     {
+    //       label: "Active Users",
+    //       pointBorderWidth: 2,
+    //       pointHoverRadius: 4,
+    //       pointHoverBorderWidth: 1,
+    //       pointRadius: 4,
+    //       fill: true,
+    //       borderWidth: 2,
+    //       data: [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630]
+    //     }
+    //   ];
       this.lineChartColors = [
        {
          borderColor: "#f96332",
@@ -305,18 +322,18 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, this.hexToRGB('#18ce0f', 0.4));
 
-    this.lineChartWithNumbersAndGridData = [
-        {
-          label: "Email Stats",
-           pointBorderWidth: 2,
-           pointHoverRadius: 4,
-           pointHoverBorderWidth: 1,
-           pointRadius: 4,
-           fill: true,
-           borderWidth: 2,
-          data: [40, 500, 650, 700, 1200, 1250, 1300, 1900]
-        }
-      ];
+    // this.lineChartWithNumbersAndGridData = [
+    //     {
+    //       label: "Email Stats",
+    //        pointBorderWidth: 2,
+    //        pointHoverRadius: 4,
+    //        pointHoverBorderWidth: 1,
+    //        pointRadius: 4,
+    //        fill: true,
+    //        borderWidth: 2,
+    //       data: [40, 500, 650, 700, 1200, 1250, 1300, 1900]
+    //     }
+    //   ];
       this.lineChartWithNumbersAndGridColors = [
        {
          borderColor: "#18ce0f",
@@ -341,18 +358,18 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(1, this.hexToRGB('#2CA8FF', 0.6));
 
 
-    this.lineChartGradientsNumbersData = [
-        {
-          label: "Active Countries",
-          pointBorderWidth: 2,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 1,
-          pointRadius: 4,
-          fill: true,
-          borderWidth: 1,
-          data: [80, 99, 86, 96, 123, 85, 100, 75, 88, 90, 123, 155]
-        }
-      ];
+    // this.lineChartGradientsNumbersData = [
+    //     {
+    //       label: "Active Countries",
+    //       pointBorderWidth: 2,
+    //       pointHoverRadius: 4,
+    //       pointHoverBorderWidth: 1,
+    //       pointRadius: 4,
+    //       fill: true,
+    //       borderWidth: 1,
+    //       data: [80, 99, 86, 96, 123, 85, 100, 75, 88, 90, 123, 155]
+    //     }
+    //   ];
     this.lineChartGradientsNumbersColors = [
      {
        backgroundColor: this.gradientFill,

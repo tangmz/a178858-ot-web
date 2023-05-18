@@ -4,7 +4,11 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './auth/login.component';
+
+import { AuthGuard } from './auth/auth.guard';
+import { AuthenticationService } from './auth/auth.service';
+
 
 const routes: Routes =[
   {
@@ -19,11 +23,13 @@ const routes: Routes =[
     children: [
         {
       path: '',
-      loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(x=>x.AdminLayoutModule)
+      loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(x=>x.AdminLayoutModule),
+      canActivate: [AuthGuard],
   }]},
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: 'dashboard',
+    canActivate: [AuthGuard],
   }
 ];
 

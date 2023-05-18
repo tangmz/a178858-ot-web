@@ -8,8 +8,8 @@ export class CaclDatatableResponse {
      */
     constructor(
         public contribution: string,
-        public employerContrib: number,
-        public employeeContrib: number,
+        public employerContrib: string,
+        public employeeContrib: string,
         public subTotal: number,
     ){}
 }

@@ -11,16 +11,18 @@ import { CalcComponent } from '../../calc/calc.component';
 import { OtReportComponent } from '../../ot-report/ot-report.component';
 import { SalaryReportComponent } from '../../salary-report/salary-report.component';
 
+import { AuthGuard } from '../../auth/auth.guard';
+
 export const AdminLayoutRoutes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard',      component: DashboardComponent },
-    { path: 'employee_details',   component: EmployeeDetailsComponent },
-    { path: 'table-list',     component: TableListComponent },
-    { path: 'typography',     component: TypographyComponent },
-    { path: 'icons',          component: IconsComponent },
-    { path: 'maps',           component: MapsComponent },
-    { path: 'notifications',  component: NotificationsComponent },
-    { path: 'ot_report',      component: OtReportComponent },
-    { path: 'salary_report',  component: SalaryReportComponent },
-    { path: 'calc',           component: CalcComponent },
+    { path: 'dashboard',      component: DashboardComponent, canActivate: [AuthGuard] },
+    { path: 'employee_details',   component: EmployeeDetailsComponent, canActivate: [AuthGuard] },
+    { path: 'table-list',     component: TableListComponent, canActivate: [AuthGuard] },
+    { path: 'typography',     component: TypographyComponent, canActivate: [AuthGuard] },
+    { path: 'icons',          component: IconsComponent, canActivate: [AuthGuard] },
+    { path: 'maps',           component: MapsComponent, canActivate: [AuthGuard] },
+    { path: 'notifications',  component: NotificationsComponent, canActivate: [AuthGuard] },
+    { path: 'ot_report',      component: OtReportComponent, canActivate: [AuthGuard] },
+    { path: 'salary_report',  component: SalaryReportComponent, canActivate: [AuthGuard] },
+    { path: 'calc',           component: CalcComponent, canActivate: [AuthGuard] },
 ];

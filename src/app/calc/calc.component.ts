@@ -26,7 +26,7 @@ export class CalcComponent implements OnInit {
   calc() {
     const salary = this.calculatorForm.value.salary;
     this.rows = this._service.calcAction(salary);
-    this.netPay = salary - this.rows[this.rows.length - 1].employeeContrib;
+    this.netPay = salary - Number(this.rows[this.rows.length - 1].employeeContrib);
   }
 
 }

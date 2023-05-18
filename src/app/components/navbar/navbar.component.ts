@@ -3,6 +3,7 @@ import { ROUTES } from '../sidebar/sidebar.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { Router } from '@angular/router';
 import Chart from 'chart.js';
+import { AuthenticationService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,7 +19,8 @@ export class NavbarComponent implements OnInit {
 
     public isCollapsed = true;
 
-    constructor(location: Location,  private element: ElementRef, private router: Router) {
+    constructor(location: Location,  private element: ElementRef, private router: Router,
+                private authService: AuthenticationService) {
       this.location = location;
           this.sidebarVisible = false;
     }
@@ -149,5 +151,9 @@ export class NavbarComponent implements OnInit {
           return this.listTitles[item].title;
         }
       }
+    }
+
+    logout() {
+      this.authService.logout();
     }
 }

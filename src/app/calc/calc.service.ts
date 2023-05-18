@@ -10,14 +10,16 @@ export class CalcService {
   private employerSocso: number;
   private employeeEpf: number;
   private employerEpf: number;
+  private employerEpfPercentage: string;
 
   calcAction(salary: number): CaclDatatableResponse[] {
+    this.employerEpfPercentage = salary <= 5000 ? '(13%)' : '(12%)';
     this.calcEpf(salary);
     this.calcSocso(salary);
-    return [new CaclDatatableResponse('EPF', this.employerEpf, this.employeeEpf, this.employerEpf + this.employeeEpf),
-            new CaclDatatableResponse('SOCSO', this.employerSocso, this.employeeSocso, this.employerSocso + this.employeeSocso),
-            new CaclDatatableResponse('Total', this.employerEpf + this.employerSocso, 
-                this.employeeEpf + this.employeeSocso, 
+    return [new CaclDatatableResponse('EPF', `${this.employerEpf} (11%)`, `${this.employeeEpf} ${this.employerEpfPercentage}`, this.employerEpf + this.employeeEpf),
+            new CaclDatatableResponse('SOCSO', `${this.employerSocso}`, `${this.employeeSocso}`, this.employerSocso + this.employeeSocso),
+            new CaclDatatableResponse('Total', `${this.employerEpf + this.employerSocso}`, 
+                `${this.employeeEpf + this.employeeSocso}`, 
                 this.employerEpf + this.employeeEpf)];
   }
 
