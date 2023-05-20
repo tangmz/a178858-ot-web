@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
-import { first } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { first, map, takeUntil } from 'rxjs/operators';
+import { StatListResponse } from './@response/stat-list-response';
 import { DashboardEndpointService } from './dashboard-endpoint.service';
 
 @Component({
@@ -8,19 +10,15 @@ import { DashboardEndpointService } from './dashboard-endpoint.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
-
-  OTRequestsData: number[];
-  lateInsData: number[];
-  earlyInsData: number[];
-  dailySalaryData: number[];
-
+export class DashboardComponent implements OnInit, OnDestroy {
+  Math = Math;
   public lineBigDashboardChartType;
   public gradientStroke;
   public chartColor;
   public canvas : any;
   public ctx;
   public gradientFill;
+  public lineBigDashboardChartData:Array<any>;
   public lineBigDashboardChartOptions:any;
   public lineBigDashboardChartLabels:Array<any>;
   public lineBigDashboardChartColors:Array<any>
@@ -29,26 +27,42 @@ export class DashboardComponent implements OnInit {
   public gradientChartOptionsConfigurationWithNumbersAndGrid: any;
 
   public lineChartType;
+  public lineChartData:Array<any>;
   public lineChartOptions:any;
   public lineChartLabels:Array<any>;
   public lineChartColors:Array<any>
 
   public lineChartWithNumbersAndGridType;
+  public lineChartWithNumbersAndGridData:Array<any>;
   public lineChartWithNumbersAndGridOptions:any;
   public lineChartWithNumbersAndGridLabels:Array<any>;
   public lineChartWithNumbersAndGridColors:Array<any>
 
   public lineChartGradientsNumbersType;
+  public lineChartGradientsNumbersData:Array<any>;
   public lineChartGradientsNumbersOptions:any;
   public lineChartGradientsNumbersLabels:Array<any>;
   public lineChartGradientsNumbersColors:Array<any>
+  OTRequestsData: number[];
+  LateInsData: number[];
+  EarlyInsData: number[];
+  DailySalaryData: number[];
+
+  lateInPage: number = 1;
+  earlyInPage: number = 1;
+  itemsPerPage: number = 5;
+
+  lateInsTable: StatListResponse[];
+  earlyInsTable: StatListResponse[];
+  
+  _unsubscribeAll: Subject<any> = new Subject<any>();
   // events
   public chartClicked(e:any):void {
-    console.log(e);
+    
   }
 
   public chartHovered(e:any):void {
-    // console.log(e);
+
   }
   public hexToRGB(hex, alpha) {
     var r = parseInt(hex.slice(1, 3), 16),
@@ -63,7 +77,28 @@ export class DashboardComponent implements OnInit {
   }
   constructor(private _endpoint: DashboardEndpointService) { }
 
-  ngOnInit() {
+  ngOnDestroy() {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+
+  async ngOnInit() {
+    //load Data
+    const otData = await this._endpoint.getOtStat().pipe(first()).toPromise();
+    this.OTRequestsData = otData.data;
+    const lateInData = await this._endpoint.getLateInStat().pipe(first()).toPromise();
+    this.LateInsData = lateInData.data;
+    const earlyInData = await this._endpoint.getEarlyInStat().pipe(first()).toPromise();
+    this.EarlyInsData = earlyInData.data;
+    const dailySalaryData = await this._endpoint.getDailySalaryStat().pipe(first()).toPromise();
+    this.DailySalaryData = dailySalaryData.data;
+    this._endpoint.getLateInUsers().pipe(takeUntil(this._unsubscribeAll)).subscribe({
+      next: (response) => { this.lateInsTable = response; }
+    })
+    this._endpoint.getEarlyInUsers().pipe(takeUntil(this._unsubscribeAll)).subscribe({
+      next: (response) => { this.earlyInsTable = response; }
+    })
+
     this.chartColor = "#FFFFFF";
     this.canvas = document.getElementById("bigDashboardChart");
     this.ctx = this.canvas.getContext("2d");
@@ -76,101 +111,88 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, "rgba(255, 255, 255, 0.24)");
 
-    this._endpoint.getOtStat().pipe(first()).subscribe({
-      next: (response) => {
-        this.OTRequestsData = response.data;
-      }
-    });
-    this._endpoint.getOtStat().pipe(first()).subscribe({
-      next: (response) => {
-        this.lineBigDashboardChartLabels = response.labels;
-      }
-    });
-    this.lineBigDashboardChartColors = [
-      {
-        backgroundColor: this.gradientFill,
-        borderColor: this.chartColor,
-        pointBorderColor: this.chartColor,
-        pointBackgroundColor: "#2c2c2c",
-        pointHoverBackgroundColor: "#2c2c2c",
-        pointHoverBorderColor: this.chartColor,
-      }
-    ];
-    // this.lineBigDashboardChartData = [
-    //   {
-    //     label: "Total OT Requests",
+    this.lineBigDashboardChartData = [
+        {
+          label: "Total OT Requests",
 
-    //     pointBorderWidth: 1,
-    //     pointHoverRadius: 7,
-    //     pointHoverBorderWidth: 2,
-    //     pointRadius: 5,
-    //     fill: true,
+          pointBorderWidth: 1,
+          pointHoverRadius: 7,
+          pointHoverBorderWidth: 2,
+          pointRadius: 5,
+          fill: true,
 
-    //     borderWidth: 2,
-    //     data: this.data,
-    //   }
-    // ];
+          borderWidth: 2,
+          data: this.OTRequestsData,
+        }
+      ];
+      this.lineBigDashboardChartColors = [
+       {
+         backgroundColor: this.gradientFill,
+         borderColor: this.chartColor,
+         pointBorderColor: this.chartColor,
+         pointBackgroundColor: "#2c2c2c",
+         pointHoverBackgroundColor: "#2c2c2c",
+         pointHoverBorderColor: this.chartColor,
+       }
+     ];
+    this._endpoint.getOtStat().pipe(first()).subscribe({next: (response) => { this.lineBigDashboardChartLabels = response.labels }});
     this.lineBigDashboardChartOptions = {
-      charts: [{
-        data: [{
-          dataPoints: this.OTRequestsData,
-        }]
-      }],
-      layout: {
-          padding: {
-              left: 20,
-              right: 20,
-              top: 0,
-              bottom: 0
+
+          layout: {
+              padding: {
+                  left: 20,
+                  right: 20,
+                  top: 0,
+                  bottom: 0
+              }
+          },
+          maintainAspectRatio: false,
+          tooltips: {
+            backgroundColor: '#fff',
+            titleFontColor: '#333',
+            bodyFontColor: '#666',
+            bodySpacing: 4,
+            xPadding: 12,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest"
+          },
+          legend: {
+              position: "bottom",
+              fillStyle: "#FFF",
+              display: false
+          },
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      fontColor: "rgba(255,255,255,0.4)",
+                      fontStyle: "bold",
+                      beginAtZero: true,
+                      maxTicksLimit: 5,
+                      padding: 10
+                  },
+                  gridLines: {
+                      drawTicks: true,
+                      drawBorder: false,
+                      display: true,
+                      color: "rgba(255,255,255,0.1)",
+                      zeroLineColor: "transparent"
+                  }
+
+              }],
+              xAxes: [{
+                  gridLines: {
+                      zeroLineColor: "transparent",
+                      display: false,
+
+                  },
+                  ticks: {
+                      padding: 10,
+                      fontColor: "rgba(255,255,255,0.4)",
+                      fontStyle: "bold"
+                  }
+              }]
           }
-      },
-      maintainAspectRatio: false,
-      tooltips: {
-        backgroundColor: '#fff',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      legend: {
-        position: "bottom",
-        fillStyle: "#FFF",
-        display: false
-      },
-      scales: {
-        yAxes: [{
-            ticks: {
-                fontColor: "rgba(255,255,255,0.4)",
-                fontStyle: "bold",
-                beginAtZero: true,
-                maxTicksLimit: 5,
-                padding: 10
-            },
-            gridLines: {
-                drawTicks: true,
-                drawBorder: false,
-                display: true,
-                color: "rgba(255,255,255,0.1)",
-                zeroLineColor: "transparent"
-            }
-
-        }],
-        xAxes: [{
-            gridLines: {
-                zeroLineColor: "transparent",
-                display: false,
-
-            },
-            ticks: {
-                padding: 10,
-                fontColor: "rgba(255,255,255,0.4)",
-                fontStyle: "bold"
-            }
-        }]
-      }
     };
 
     this.lineBigDashboardChartType = 'line';
@@ -286,18 +308,18 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, "rgba(249, 99, 59, 0.40)");
 
-    // this.lineChartData = [
-    //     {
-    //       label: "Active Users",
-    //       pointBorderWidth: 2,
-    //       pointHoverRadius: 4,
-    //       pointHoverBorderWidth: 1,
-    //       pointRadius: 4,
-    //       fill: true,
-    //       borderWidth: 2,
-    //       data: [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630]
-    //     }
-    //   ];
+    this.lineChartData = [
+        {
+          label: "Late In",
+          pointBorderWidth: 2,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 1,
+          pointRadius: 4,
+          fill: true,
+          borderWidth: 2,
+          data: this.LateInsData,
+        }
+      ];
       this.lineChartColors = [
        {
          borderColor: "#f96332",
@@ -306,7 +328,7 @@ export class DashboardComponent implements OnInit {
          backgroundColor: this.gradientFill
        }
      ];
-    this.lineChartLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    this._endpoint.getLateInStat().pipe(first()).subscribe({next: (response) => { this.lineChartLabels = response.labels }});
     this.lineChartOptions = this.gradientChartOptionsConfiguration;
 
     this.lineChartType = 'line';
@@ -322,18 +344,18 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, this.hexToRGB('#18ce0f', 0.4));
 
-    // this.lineChartWithNumbersAndGridData = [
-    //     {
-    //       label: "Email Stats",
-    //        pointBorderWidth: 2,
-    //        pointHoverRadius: 4,
-    //        pointHoverBorderWidth: 1,
-    //        pointRadius: 4,
-    //        fill: true,
-    //        borderWidth: 2,
-    //       data: [40, 500, 650, 700, 1200, 1250, 1300, 1900]
-    //     }
-    //   ];
+    this.lineChartWithNumbersAndGridData = [
+        {
+          label: "Early In",
+           pointBorderWidth: 2,
+           pointHoverRadius: 4,
+           pointHoverBorderWidth: 1,
+           pointRadius: 4,
+           fill: true,
+           borderWidth: 2,
+          data: this.EarlyInsData,
+        }
+      ];
       this.lineChartWithNumbersAndGridColors = [
        {
          borderColor: "#18ce0f",
@@ -342,7 +364,7 @@ export class DashboardComponent implements OnInit {
          backgroundColor: this.gradientFill
        }
      ];
-    this.lineChartWithNumbersAndGridLabels = ["12pm,", "3pm", "6pm", "9pm", "12am", "3am", "6am", "9am"];
+    this._endpoint.getEarlyInStat().pipe(first()).subscribe({next: (response) => { this.lineChartWithNumbersAndGridLabels = response.labels }});
     this.lineChartWithNumbersAndGridOptions = this.gradientChartOptionsConfigurationWithNumbersAndGrid;
 
     this.lineChartWithNumbersAndGridType = 'line';
@@ -358,18 +380,18 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(1, this.hexToRGB('#2CA8FF', 0.6));
 
 
-    // this.lineChartGradientsNumbersData = [
-    //     {
-    //       label: "Active Countries",
-    //       pointBorderWidth: 2,
-    //       pointHoverRadius: 4,
-    //       pointHoverBorderWidth: 1,
-    //       pointRadius: 4,
-    //       fill: true,
-    //       borderWidth: 1,
-    //       data: [80, 99, 86, 96, 123, 85, 100, 75, 88, 90, 123, 155]
-    //     }
-    //   ];
+    this.lineChartGradientsNumbersData = [
+        {
+          label: "Total Daily Salary",
+          pointBorderWidth: 2,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 1,
+          pointRadius: 4,
+          fill: true,
+          borderWidth: 1,
+          data: this.DailySalaryData,
+        }
+      ];
     this.lineChartGradientsNumbersColors = [
      {
        backgroundColor: this.gradientFill,
@@ -378,7 +400,7 @@ export class DashboardComponent implements OnInit {
        pointBackgroundColor: "#2CA8FF",
      }
    ];
-    this.lineChartGradientsNumbersLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    this._endpoint.getDailySalaryStat().pipe(first()).subscribe({next: (response) => { this.lineChartGradientsNumbersLabels = response.labels }});
     this.lineChartGradientsNumbersOptions = {
         maintainAspectRatio: false,
         legend: {

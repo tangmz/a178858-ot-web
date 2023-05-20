@@ -36,14 +36,14 @@ export class DashboardEndpointService {
         )
     }
 
-    public getLateInUsers() :Observable<StatListResponse> {
-        return this._http.get<StatListResponse>(
+    public getLateInUsers() :Observable<StatListResponse[]> {
+        return this._http.get<StatListResponse[]>(
             `${this.getBaseUrl()}/stats/late_in/list`
         )
     }
 
-    public getEarlyInUsers() :Observable<StatListResponse> {
-        return this._http.get<StatListResponse>(
+    public getEarlyInUsers() :Observable<StatListResponse[]> {
+        return this._http.get<StatListResponse[]>(
             `${this.getBaseUrl()}/stats/early_in/list`
         )
     }
