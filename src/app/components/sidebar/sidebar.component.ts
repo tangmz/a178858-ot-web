@@ -14,7 +14,7 @@ export const ROUTES: RouteInfo[] = [
     // { path: '/table-list', title: 'Table List',  icon:'design_bullet-list-67', class: '' },
     { path: '/ot_report', title: 'OT Report',  icon:'business_chart-bar-32', class: '' },
     { path: '/salary_report', title: 'Salary Report',  icon:'business_chart-pie-36', class: '' },
-    { path: '/calc', title: 'Calculator',  icon:'education_paper', class: 'active active-pro' }
+    { path: '/calc', title: 'EPF & SOCSO Calculator',  icon:'education_paper', class: 'active active-pro' }
 
 ];
 

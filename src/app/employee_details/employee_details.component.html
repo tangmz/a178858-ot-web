@@ -13,7 +13,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Company</label>
-                  <input type="text" class="form-control" disabled="" placeholder="Company" value="Sharon Sdn Bhd.">
+                  <input type="text" class="form-control" disabled="" placeholder="Company" value="OT Manager Sdn Bhd.">
                 </div>
               </div>
               <div class="col-md-4">
@@ -47,13 +47,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label>Base Salary (RM)</label>
-                  <input type="number" class="form-control" placeholder="2500" formControlName="baseSalary">
+                  <input type="number" class="form-control" placeholder="1500" formControlName="baseSalary">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label>Position</label>
-                  <input type="text" class="form-control" placeholder="Clerk" formControlName="position">
+                  <input type="text" class="form-control" placeholder="F&B Supervisor" formControlName="position">
                 </div>
               </div>
             </div>
@@ -83,11 +83,11 @@
         </div>
         <hr>
         <div class="button-container">
-          <button class="btn btn-neutral btn-danger btn-round btn-lg" [disabled]="!!employeeForm.value.username" (click)="onCreate()">
+          <button class="btn btn-neutral btn-danger btn-round btn-lg" [disabled]="!!id" (click)="onCreate()">
             <i class="now-ui-icons ui-1_simple-add"></i>
             Create
           </button>
-          <button class="btn btn-neutral btn-success btn-round btn-lg" [disabled]="!employeeForm.value.username" (click)="onSave()">
+          <button class="btn btn-neutral btn-success btn-round btn-lg" [disabled]="!id" (click)="onSave()">
             <i class="now-ui-icons ui-1_check"></i>
             Save
           </button>

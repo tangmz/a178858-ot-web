@@ -64,6 +64,7 @@ export class EmployeeDetailsComponent implements OnInit, OnDestroy {
   }
 
   onClear() {
+    this.id = null;
     this.employeeForm.controls.name.setValue(null);
     this.employeeForm.controls.username.setValue(null);
     this.employeeForm.controls.password.setValue(null);
