@@ -124,11 +124,11 @@
               <th>No.</th>
               <th>Employee Name</th>
               <th>Phone Number</th>
-              <th>Total</th>
+              <th>Freq.</th>
             </thead>
             <tbody>
               <tr *ngFor="let lateIn of lateInsTable | paginate: { itemsPerPage: itemsPerPage, currentPage: lateInPage }; let i = index;">
-                <td>{{ lateIn.indexOf(row)+1 }}</td>
+                <td>{{ lateInsTable.indexOf(lateIn)+1 }}</td>
                 <td>{{ lateIn.employeeName }}</td>
                 <td>{{ lateIn.phoneNumber }}</td>
                 <td>{{ lateIn.count }}</td>
@@ -162,11 +162,11 @@
               <th>No.</th>
               <th>Employee Name</th>
               <th>Phone Number</th>
-              <th>Total</th>
+              <th>Freq.</th>
             </thead>
             <tbody>
               <tr *ngFor="let earlyIn of earlyInsTable | paginate: { itemsPerPage: itemsPerPage, currentPage: earlyInPage }; let i = index;">
-                <td>{{ earlyIn.indexOf(row)+1 }}</td>
+                <td>{{ earlyInsTable.indexOf(earlyIn)+1 }}</td>
                 <td>{{ earlyIn.employeeName }}</td>
                 <td>{{ earlyIn.phoneNumber }}</td>
                 <td>{{ earlyIn.count }}</td>
