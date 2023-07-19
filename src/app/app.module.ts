@@ -8,6 +8,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { BlockUIModule } from 'ng-block-ui';
+import { BlockUIHttpModule } from 'ng-block-ui/http';
 
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
@@ -31,6 +33,8 @@ import { LoginComponent } from './auth/login.component';
     ToastrModule.forRoot(),
     MatTableModule,
     NgxPaginationModule,
+    BlockUIModule.forRoot({ message: "Loading..." }),
+    BlockUIHttpModule.forRoot({ blockAllRequestsInProgress: true }),
   ],
   declarations: [
     AppComponent,

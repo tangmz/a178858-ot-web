@@ -18,7 +18,7 @@
               </div>
             </div>
             <div class="row button-container calc-button">
-              <button class="btn btn-primary btn-outline-primary btn-round" (click)="calc()">
+              <button class="btn btn-primary btn-outline-primary btn-round" [disabled]="calculatorForm.invalid" (click)="calc()">
                 <i class="now-ui-icons design-2_ruler-pencil"></i>
                 Calculate
               </button>
@@ -53,8 +53,8 @@
           </div>
           <div class="payable">
             <span class="text-primary">
-              <b>Net Salary: RM
-              {{ netPay || '0' }}</b>
+              <b>Net Salary:
+              {{ netPay || 0 | currency :'RM':'symbol':'1.2-2' }}</b>
             </span>
           </div>
         </div>

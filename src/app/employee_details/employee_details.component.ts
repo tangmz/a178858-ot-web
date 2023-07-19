@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EmployeeEndpointService } from './employee-endpoint.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeeDatatableResponse } from './@response/employee-datatable-response';
 import { EmployeeRequest } from './@request/employee-request';
 import { ToastrService } from 'ngx-toastr';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-employee_details',
@@ -25,15 +26,17 @@ export class EmployeeDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private _endpoint: EmployeeEndpointService,
               private formBuilder: FormBuilder,
-              private toastr: ToastrService) { 
+              private toastr: ToastrService,
+              private titleService: Title,) { 
     this.employeeForm = this.formBuilder.group({
-      username: [''],
-      password: [''],
-      name: [''],
-      phoneNumber: [''],
-      baseSalary: [''],
-      position: [''],
-    })
+      username: [null, Validators.required],
+      password: [null, Validators.required],
+      name: [null, Validators.required],
+      phoneNumber: [null, Validators.required],
+      baseSalary: [null, Validators.required],
+      position: [null, Validators.required],
+    });
+    this.titleService.setTitle('Employee Details')
    }
 
   ngOnInit(): void {
@@ -65,15 +68,19 @@ export class EmployeeDetailsComponent implements OnInit, OnDestroy {
 
   onClear() {
     this.id = null;
-    this.employeeForm.controls.name.setValue(null);
-    this.employeeForm.controls.username.setValue(null);
-    this.employeeForm.controls.password.setValue(null);
-    this.employeeForm.controls.phoneNumber.setValue(null);
-    this.employeeForm.controls.baseSalary.setValue(null);
-    this.employeeForm.controls.position.setValue(null);
+    this.employeeForm.reset();
   }
 
   onCreate() {
+    if(!this.employeeForm.valid) {
+      this.toastr.error('<span class="now-ui-icons objects_support-17"></span> <b>OH NO!</b> Please fill up the requried values in the form.', '', {
+        timeOut: 8000,
+        closeButton: true,
+        enableHtml: true,
+        toastClass: "alert alert-error alert-with-icon",
+      });
+      return;
+    }
     this.request = {
       username: this.employeeForm.value.username,
       password: this.employeeForm.value.password,
@@ -111,6 +118,15 @@ export class EmployeeDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
+    if(!this.employeeForm.valid) {
+      this.toastr.error('<span class="now-ui-icons objects_support-17"></span> <b>OH NO!</b> Please fill up the requried values in the form.', '', {
+        timeOut: 8000,
+        closeButton: true,
+        enableHtml: true,
+        toastClass: "alert alert-error alert-with-icon",
+      });
+      return;
+    }
     this.request = {
       id: this.id,
       username: this.employeeForm.value.username,

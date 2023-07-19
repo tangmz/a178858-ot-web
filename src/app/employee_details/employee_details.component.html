@@ -59,7 +59,7 @@
             </div>
           </form>
           <div class="button-container">
-            <button class="btn btn-primary btn-outline-primary btn-round" (click)="onClear()">
+            <button class="btn btn-primary btn-outline-primary btn-round" [disabled]="employeeForm.pristine" (click)="onClear()">
               <i class="now-ui-icons ui-1_simple-remove"></i>
               Clear
             </button>

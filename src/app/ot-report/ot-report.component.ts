@@ -4,6 +4,7 @@ import { OtReportEndpointService } from './ot-report-endpoint.service';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { EmployeeDatatableResponse } from '../employee_details/@response/employee-datatable-response';
 import { OtResponse } from './@response/ot-response';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ot-report',
@@ -20,7 +21,10 @@ export class OtReportComponent implements OnInit, OnDestroy {
   itemsPerPage: number = 5;
   selectedEmployeeId: number;
 
-  constructor(private _endpoint: OtReportEndpointService) { }
+  constructor(private _endpoint: OtReportEndpointService,
+    private titleService: Title,) { 
+      this.titleService.setTitle('OT Report');
+    }
 
   ngOnInit(): void {
     this.fetch();

@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import * as Chartist from 'chartist';
 import { Subject } from 'rxjs';
 import { first, map, takeUntil } from 'rxjs/operators';
@@ -75,7 +76,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  constructor(private _endpoint: DashboardEndpointService) { }
+  constructor(private _endpoint: DashboardEndpointService,
+    private titleService: Title,) { 
+      this.titleService.setTitle('Dashboard');
+    }
 
   ngOnDestroy() {
     this._unsubscribeAll.next();
