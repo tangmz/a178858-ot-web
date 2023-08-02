@@ -4,8 +4,8 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   api: {
-    url: 'http://localhost:8080'
+    url: 'http://otmanager.ddnsfree.com:3010'
   }
 };
