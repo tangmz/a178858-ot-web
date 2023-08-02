@@ -122,7 +122,7 @@
         </div>
         <div class="row single-row mt-10 d-flex justify-content-between">
           <div class="col-md-4"> Page {{ lateInPage }} of {{ lateInsTable.length == 0 ? 1 : Math.ceil(lateInsTable.length / itemsPerPage) }} </div>
-          <pagination-controls (pageChange)="lateInPage = $event"></pagination-controls>
+          <pagination-controls id="lateInPagination" (pageChange)="lateInPage = $event"></pagination-controls>
         </div>
       </div>
     </div>
@@ -160,7 +160,7 @@
         </div>
         <div class="row single-row mt-10 d-flex justify-content-between">
           <div class="col-md-4"> Page {{ earlyInPage }} of {{ earlyInsTable.length == 0 ? 1 : Math.ceil(earlyInsTable.length / itemsPerPage) }} </div>
-          <pagination-controls (pageChange)="earlyInPage = $event"></pagination-controls>
+          <pagination-controls id="earlyInPagination" (pageChange)="earlyInPage = $event"></pagination-controls>
         </div>
       </div>
     </div>
